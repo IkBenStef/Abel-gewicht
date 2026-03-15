@@ -33,7 +33,7 @@ st.subheader("Nieuwe meting toevoegen")
 
 with st.form("entry_form"):
     dag = st.date_input("Datum van meting")
-    gewicht = st.number_input("Gewicht (kg)", min_value=0.1, max_value=100.0, value=20.0, step=0.1)
+    gewicht = st.number_input("Gewicht (kg)", min_value=0.1, max_value=25.0, value=20.0, step=0.01)
     submit_button = st.form_submit_button(label="Opslaan")
 
     if submit_button:
