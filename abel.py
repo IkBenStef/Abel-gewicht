@@ -32,7 +32,7 @@ st.subheader("Nieuwe meting toevoegen")
 
 with st.form("entry_form"):
     dag = st.date_input("Datum van meting")
-    gewicht = st.number_input("Gewicht (kg)", min_value=0, max_value=25.0, value=20.0, step=0.01)
+    gewicht = st.number_input("Gewicht (kg)", min_value=0.1, max_value=25.0, value=20.0, step=0.01)
     
     # --- NIEUW: Wachtwoord veld ---
     ingevuld_wachtwoord = st.text_input("Voer wachtwoord in om op te slaan", type="password")
