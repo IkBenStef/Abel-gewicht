@@ -25,7 +25,6 @@ if not df.empty:
         markers=True,
         title='Gewicht over tijd'
     )
-    fig.update_traces(line_color='blue', marker=dict(size=10, color='red'))
     st.plotly_chart(fig, use_container_width=True)
 
 
