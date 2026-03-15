@@ -20,12 +20,12 @@ df = conn.read(spreadsheet=sheet_url, ttl="0s")
 if not df.empty:
     st.subheader("Gewichtsverloop")
     # We zorgen dat 'dag' een datumtype is voor een mooie grafiek
-    df['dag'] = pd.to_datetime(df['dag'])
-    st.line_chart(data=df, x='dag', y='gewicht')
+    df['dag'] = pd.to_datetime(df['datum'])
+    st.line_chart(data=df, x='datum', y='gewicht')
 
 # 4. Tabel tonen
 st.subheader("Historie")
-st.dataframe(df.sort_values(by="dag", ascending=False), use_container_width=True)
+st.dataframe(df.sort_values(by="datum", ascending=False), use_container_width=True)
 
 # 5. Nieuwe invoer via een Formulier
 st.divider()
@@ -38,7 +38,7 @@ with st.form("entry_form"):
 
     if submit_button:
         # Nieuwe rij maken
-        new_data = pd.DataFrame([{"dag": str(dag), "gewicht": gewicht}])
+        new_data = pd.DataFrame([{"datum": str(dag), "gewicht": gewicht}])
         
         # Bestaande data combineren met nieuwe data
         updated_df = pd.concat([df, new_data], ignore_index=True)
