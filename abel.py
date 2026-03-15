@@ -17,17 +17,14 @@ df = conn.read(spreadsheet=sheet_url, ttl="0s")
 
 # 3. Grafiek tonen
 if not df.empty:
+
     st.subheader("Gewichtsverloop")
+
+    # Let op: zorg dat de kolomnaam in je CSV/Sheet 'datum' is
+
     df['datum'] = pd.to_datetime(df['datum'])
 
-    # Maak de grafiek met zowel lijn als punten
-    chart = alt.Chart(df).mark_line(point=True).encode(
-        x='datum:T',
-        y='gewicht:Q',
-        tooltip=['datum', 'gewicht']
-    ).interactive()
-
-    st.altair_chart(chart, use_container_width=True)
+    st.line_chart(data=df, x='datum', y='gewicht')
 
 # 4. Tabel tonen
 st.subheader("Historie")
