@@ -9,9 +9,12 @@ st.title("🐾 Mijn Hond: Gewicht Tracker")
 # 1. Verbinding maken met Google Sheets
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-# 2. Data ophalen
-# Vervang 'URL_VAN_JE_SHEET' door de werkelijke link in je secrets of direct hier voor test
-df = conn.read(ttl="0s") # ttl="0s" zorgt dat hij niet buffert en altijd de nieuwste data pakt
+# Zoek de URL expliciet op in de secrets
+sheet_url = st.secrets["connections"]["gsheets"]["spreadsheet"]
+
+# Geef de URL direct mee aan de connectie
+conn = st.connection("gsheets", type=GSheetsConnection)
+df = conn.read(spreadsheet=sheet_url, ttl="0s")
 
 # 3. Grafiek tonen
 if not df.empty:
