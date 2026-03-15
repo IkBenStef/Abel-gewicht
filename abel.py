@@ -33,8 +33,8 @@ st.subheader("Nieuwe meting toevoegen")
 
 with st.form("entry_form"):
     dag = st.date_input("Datum van meting")
-    gewicht = st.number_input("Gewicht (kg)", min_value=0.1, max_value=100.0, step=0.1)
-    submit_button = st.form_submit_button(label="Opslaan in Google Sheets")
+    gewicht = st.number_input("Gewicht (kg)", min_value=0.1, max_value=100.0, value=20.0, step=0.1)
+    submit_button = st.form_submit_button(label="Opslaan")
 
     if submit_button:
         # Nieuwe rij maken
@@ -47,6 +47,4 @@ with st.form("entry_form"):
         conn.update(data=updated_df)
         
         st.success("Gegevens zijn opgeslagen!")
-        st.balloons()
-        # Pagina verversen om de nieuwe grafiek te zien
         st.rerun()
