@@ -75,12 +75,12 @@ st.markdown("<hr style='margin: 15px 0; border: 0.5px solid rgba(255,255,255,0.1
 # 5. Onderste Rij: Grotere Categorie-grafiek (links) + Wie Kookt & Tabel (rechts)
 col_cat, col_side = st.columns([1.6, 1], gap="medium")
 
-# Functie om Plotly achtergrond transparant te maken
+# Aangepaste functie zonder de foutieve "inherit" kleurwaarde
 def make_transparent(fig):
     fig.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        font=dict(color="inherit")  # Past zich automatisch aan het thema aan
+        font=dict(color="#ffffff")  # Gebruik een geldige hex-kleur, bijv. wit (#ffffff) of zwart (#000000)
     )
     return fig
 
