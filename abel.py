@@ -75,7 +75,7 @@ except Exception as e:
 st.markdown("### 📊 Overzicht van mijn avondeten")
 a1, a2 = st.columns([1, 4])
 with a1:
-    st.metric("Eten van zoveel dagen:", len(df))
+    st.metric("Eten van zoveel dagen ingevuld:", len(df))
 with a2:
     if not df.empty and "Wie" in df.columns:
         wie_counts = df["Wie"].value_counts().reset_index()
