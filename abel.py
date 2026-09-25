@@ -80,7 +80,6 @@ m1, m2 = st.columns([1, 4])
 with m1:
     st.metric("Totaal Maaltijden", len(df))
 with m2:
-    st.markdown("### 👨‍🍳 Wie Kookt Er?")
     if not df.empty and "Wie" in df.columns:
         wie_counts = df["Wie"].value_counts().reset_index()
         wie_counts.columns = ["Wie", "Aantal"]
@@ -89,7 +88,7 @@ with m2:
             wie_counts, x="Aantal", y="Wie", color="Wie",
             color_discrete_sequence=px.colors.qualitative.Set2
         )
-        fig_wie.update_layout(height=180, margin=dict(l=10, r=10, t=10, b=10), showlegend=False)
+        fig_wie.update_layout(height=100, margin=dict(l=10, r=10, t=10, b=10), showlegend=False)
         fig_wie = make_transparent(fig_wie)  # Nu werkt deze aanroep wél!
         st.plotly_chart(fig_wie, use_container_width=True)
 
