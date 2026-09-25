@@ -72,7 +72,7 @@ except Exception as e:
     st.stop()
 
 # 4. Bovenste Rij: Statistieken (a1 & a2)
-st.markdown("### 📊 Overzicht")
+st.markdown("### 📊 Overzicht van mijn avondeten")
 a1, a2 = st.columns([1, 4])
 with a1:
     st.metric("Totaal Maaltijden", len(df))
