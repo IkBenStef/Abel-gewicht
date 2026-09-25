@@ -134,5 +134,4 @@ with col_side:
 
     st.markdown("### 📋 Recentste Maaltijden")
     if not df.empty:
-        recent_df = df.tail(4).iloc[::-1][["Dag", "Wat", "Wie", "Categorie"]]
-        st.dataframe(recent_df, hide_index=True, use_container_width=True, height=160)
+        st.dataframe(df, hide_index=True, use_container_width=True, height=160)
