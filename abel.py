@@ -67,19 +67,26 @@ st.markdown("<h2 style='text-align: center;'>🍽️ Eetdagboek & Analyse Dashbo
 
 # 4. Bovenste Rij: Statistieken (Metrics)
 st.markdown("### 📊 Overzicht")
-m1, m2, m3, m4 = st.columns(4)
+m1, m2, m3 = st.columns(2)
 with m1:
     st.metric("Totaal Maaltijden", len(df))
 with m2:
     meeste_kok = df["Wie"].mode()[0] if not df.empty and "Wie" in df.columns and len(df["Wie"].mode()) > 0 else "-"
     st.metric("Meest Gekookt Door", meeste_kok)
 with m3:
-    top_cat = df["Categorie"].mode()[0] if not df.empty and "Categorie" in df.columns and len(df["Categorie"].mode()) > 0 else "-"
-    st.metric("Top Categorie", top_cat)
-with m4:
-    thuis_pct = f"{round((df['Waar'] == 'Thuis').mean() * 100)}%" if not df.empty and "Waar" in df.columns else "-"
-    st.metric("Thuis Gegeten", thuis_pct)
-
+    st.markdown("### 👨‍🍳 Wie Kookt Er?")
+    if not df.empty and "Wie" in df.columns:
+        wie_counts = df["Wie"].value_counts().reset_index()
+        wie_counts.columns = ["Wie", "Aantal"]
+        
+        fig_wie = px.bar(
+            wie_counts, x="Wie", y="Aantal", color="Wie",
+            color_discrete_sequence=px.colors.qualitative.Set2
+        )
+        fig_wie.update_layout(height=180, margin=dict(l=10, r=10, t=10, b=10), showlegend=False)
+        fig_wie = make_transparent(fig_wie)
+        st.plotly_chart(fig_wie, use_container_width=True)
+    
 st.markdown("<hr style='margin: 15px 0; border: 0.5px solid rgba(255,255,255,0.1);'>", unsafe_allow_html=True)
 
 # 5. Onderste Rij: Grotere Categorie-grafiek (links) + Wie Kookt & Tabel (rechts)
@@ -119,19 +126,6 @@ with col_cat:
         st.plotly_chart(fig_cat, use_container_width=True)
 
 with col_side:
-    st.markdown("### 👨‍🍳 Wie Kookt Er?")
-    if not df.empty and "Wie" in df.columns:
-        wie_counts = df["Wie"].value_counts().reset_index()
-        wie_counts.columns = ["Wie", "Aantal"]
-        
-        fig_wie = px.bar(
-            wie_counts, x="Wie", y="Aantal", color="Wie",
-            color_discrete_sequence=px.colors.qualitative.Set2
-        )
-        fig_wie.update_layout(height=180, margin=dict(l=10, r=10, t=10, b=10), showlegend=False)
-        fig_wie = make_transparent(fig_wie)
-        st.plotly_chart(fig_wie, use_container_width=True)
-
     st.markdown("### 📋 Recentste Maaltijden")
     if not df.empty:
         st.dataframe(df, hide_index=True, use_container_width=True, height=160)
