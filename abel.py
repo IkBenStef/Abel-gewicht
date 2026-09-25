@@ -47,7 +47,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- FUNCTIES (bovenaan gedefinieerd zodat ze overal gebruikt kunnen worden) ---
+# --- FUNCTIES ---
 def make_transparent(fig):
     fig.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
@@ -71,12 +71,12 @@ except Exception as e:
     st.error("Kon geen gegevens ophalen uit Google Sheets. Controleer je secrets configuratie.")
     st.stop()
 
-# 4. Bovenste Rij: Statistieken (Metrics + Wie Kookt Er)
+# 4. Bovenste Rij: Statistieken (a1 & a2)
 st.markdown("### 📊 Overzicht")
-a1, b2 = st.columns([1, 4])
+a1, a2 = st.columns([1, 4])
 with a1:
     st.metric("Totaal Maaltijden", len(df))
-with b2:
+with a2:
     if not df.empty and "Wie" in df.columns:
         wie_counts = df["Wie"].value_counts().reset_index()
         wie_counts.columns = ["Wie", "Aantal"]
@@ -86,12 +86,12 @@ with b2:
             color_discrete_sequence=px.colors.qualitative.Set2
         )
         fig_wie.update_layout(height=100, margin=dict(l=10, r=10, t=10, b=10), showlegend=False)
-        fig_wie = make_transparent(fig_wie)  # Nu werkt deze aanroep wél!
+        fig_wie = make_transparent(fig_wie)
         st.plotly_chart(fig_wie, use_container_width=True)
 
 st.divider()
 
-# 5. Onderste Rij: Grotere Categorie-grafiek (links) + Tabel (rechts)
+# 5. Onderste Rij: Categorieën (b1) + Dynamische Weergave (b2)
 b1, b2 = st.columns(2)
 
 with b1:
@@ -100,7 +100,6 @@ with b1:
         cat_counts = df["Categorie"].value_counts().reset_index()
         cat_counts.columns = ["Categorie", "Aantal"]
         
-        # Uitgebreide en grotere Plotly Donut Chart
         fig_cat = px.pie(
             cat_counts, 
             names="Categorie", 
@@ -108,7 +107,6 @@ with b1:
             hole=0.45, 
             color_discrete_sequence=px.colors.qualitative.Pastel
         )
-        # Hoogte vergroot zodat categorieën goed zichtbaar en dominant zijn
         fig_cat.update_layout(
             height=420, 
             margin=dict(l=10, r=10, t=20, b=10), 
@@ -116,9 +114,69 @@ with b1:
             legend=dict(orientation="v", yanchor="middle", y=0.5, xanchor="right", x=-0.1)
         )
         fig_cat = make_transparent(fig_cat)
-        st.plotly_chart(fig_cat, use_container_width=True, height=500)
+        st.plotly_chart(fig_cat, use_container_width=True)
 
 with b2:
-    st.markdown("### 📋 Recentste Maaltijden")
-    if not df.empty:
-        st.dataframe(df, hide_index=True, use_container_width=True, height=500)
+    # Dropdown menu keuze
+    weergave_optie = st.selectbox(
+        "Kies weergave:",
+        ["Heel DataFrame", "Detail grafieken"],
+        label_visibility="collapsed"
+    )
+
+    if weergave_optie == "Heel DataFrame":
+        if not df.empty:
+            st.dataframe(df, hide_index=True, use_container_width=True, height=450)
+
+    elif weergave_optie == "Detail grafieken":
+        # Splitsing 50/50 binnen kolom b2
+        sub_left, sub_right = st.columns(2)
+
+        with sub_left:
+            # 1. Cirkeldiagram Vlees
+            if not df.empty and "Vlees" in df.columns:
+                # Verwijder lege regels voor schone weergave
+                vlees_df = df[df["Vlees"].astype(str).str.strip() != ""]
+                if not vlees_df.empty:
+                    vlees_counts = vlees_df["Vlees"].value_counts().reset_index()
+                    vlees_counts.columns = ["Vlees", "Aantal"]
+                    fig_vlees = px.pie(
+                        vlees_counts, names="Vlees", values="Aantal", hole=0.3,
+                        title="🥩 Vlees", color_discrete_sequence=px.colors.qualitative.Set3
+                    )
+                    fig_vlees.update_layout(height=210, margin=dict(l=5, r=5, t=30, b=5), showlegend=False)
+                    fig_vlees = make_transparent(fig_vlees)
+                    st.plotly_chart(fig_vlees, use_container_width=True)
+
+            # 2. Cirkeldiagram Groente
+            if not df.empty and "Groente" in df.columns:
+                groente_df = df[df["Groente"].astype(str).str.strip() != ""]
+                if not groente_df.empty:
+                    groente_counts = groente_df["Groente"].value_counts().reset_index()
+                    groente_counts.columns = ["Groente", "Aantal"]
+                    fig_groente = px.pie(
+                        groente_counts, names="Groente", values="Aantal", hole=0.3,
+                        title="🥦 Groente", color_discrete_sequence=px.colors.qualitative.Emerald
+                    )
+                    fig_groente.update_layout(height=210, margin=dict(l=5, r=5, t=30, b=5), showlegend=False)
+                    fig_groente = make_transparent(fig_groente)
+                    st.plotly_chart(fig_groente, use_container_width=True)
+
+        with sub_right:
+            # Verticale Histogram voor 'Hoelaat'
+            if not df.empty and "Hoelaat" in df.columns:
+                hoelaat_df = df[df["Hoelaat"].astype(str).str.strip() != ""]
+                if not hoelaat_df.empty:
+                    fig_hoelaat = px.histogram(
+                        hoelaat_df, x="Hoelaat", 
+                        title="⏰ Tijdstippen",
+                        color_discrete_sequence=["#FFA07A"]
+                    )
+                    fig_hoelaat.update_layout(
+                        height=420, 
+                        margin=dict(l=10, r=10, t=30, b=10),
+                        xaxis_title="Tijd",
+                        yaxis_title="Aantal"
+                    )
+                    fig_hoelaat = make_transparent(fig_hoelaat)
+                    st.plotly_chart(fig_hoelaat, use_container_width=True)
