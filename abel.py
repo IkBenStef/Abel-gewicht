@@ -71,15 +71,12 @@ except Exception as e:
     st.error("Kon geen gegevens ophalen uit Google Sheets. Controleer je secrets configuratie.")
     st.stop()
 
-# Header
-st.markdown("<h2 style='text-align: center;'>🍽️ Eetdagboek & Analyse Dashboard</h2>", unsafe_allow_html=True)
-
 # 4. Bovenste Rij: Statistieken (Metrics + Wie Kookt Er)
 st.markdown("### 📊 Overzicht")
-m1, m2 = st.columns([1, 4])
-with m1:
+a1, b2 = st.columns([1, 4])
+with a1:
     st.metric("Totaal Maaltijden", len(df))
-with m2:
+with b2:
     if not df.empty and "Wie" in df.columns:
         wie_counts = df["Wie"].value_counts().reset_index()
         wie_counts.columns = ["Wie", "Aantal"]
@@ -95,9 +92,9 @@ with m2:
 st.markdown("<hr style='margin: 15px 0; border: 0.5px solid rgba(255,255,255,0.1);'>", unsafe_allow_html=True)
 
 # 5. Onderste Rij: Grotere Categorie-grafiek (links) + Tabel (rechts)
-col_cat, col_side = st.columns([1.6, 1], gap="medium")
+b1, b2 = st.columns(2)
 
-with col_cat:
+with a1:
     st.markdown("### 🏷️ Categorieën Overzicht")
     if not df.empty and "Categorie" in df.columns:
         cat_counts = df["Categorie"].value_counts().reset_index()
@@ -119,9 +116,9 @@ with col_cat:
             legend=dict(orientation="h", yanchor="bottom", y=-0.1, xanchor="center", x=0.5)
         )
         fig_cat = make_transparent(fig_cat)
-        st.plotly_chart(fig_cat, use_container_width=True)
+        st.plotly_chart(fig_cat, use_container_width=True, height=500)
 
-with col_side:
+with b2:
     st.markdown("### 📋 Recentste Maaltijden")
     if not df.empty:
-        st.dataframe(df, hide_index=True, use_container_width=True, height=350)
+        st.dataframe(df, hide_index=True, use_container_width=True, height=500)
