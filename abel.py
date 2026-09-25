@@ -47,6 +47,15 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+# --- FUNCTIES (bovenaan gedefinieerd zodat ze overal gebruikt kunnen worden) ---
+def make_transparent(fig):
+    fig.update_layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(color="#ffffff")  # Aanpassen naar #000000 als je site een lichte achtergrond heeft
+    )
+    return fig
+
 # 3. Verbinding maken met Google Sheets
 conn = st.connection("gsheets", type=GSheetsConnection)
 
@@ -65,9 +74,9 @@ except Exception as e:
 # Header
 st.markdown("<h2 style='text-align: center;'>🍽️ Eetdagboek & Analyse Dashboard</h2>", unsafe_allow_html=True)
 
-# 4. Bovenste Rij: Statistieken (Metrics)
+# 4. Bovenste Rij: Statistieken (Metrics + Wie Kookt Er)
 st.markdown("### 📊 Overzicht")
-m1, m2, m3 = st.columns([1,1,2])
+m1, m2, m3 = st.columns([1, 1, 2])
 with m1:
     st.metric("Totaal Maaltijden", len(df))
 with m2:
@@ -84,22 +93,13 @@ with m3:
             color_discrete_sequence=px.colors.qualitative.Set2
         )
         fig_wie.update_layout(height=180, margin=dict(l=10, r=10, t=10, b=10), showlegend=False)
-        fig_wie = make_transparent(fig_wie)
+        fig_wie = make_transparent(fig_wie)  # Nu werkt deze aanroep wél!
         st.plotly_chart(fig_wie, use_container_width=True)
-    
+
 st.markdown("<hr style='margin: 15px 0; border: 0.5px solid rgba(255,255,255,0.1);'>", unsafe_allow_html=True)
 
-# 5. Onderste Rij: Grotere Categorie-grafiek (links) + Wie Kookt & Tabel (rechts)
+# 5. Onderste Rij: Grotere Categorie-grafiek (links) + Tabel (rechts)
 col_cat, col_side = st.columns([1.6, 1], gap="medium")
-
-# Aangepaste functie zonder de foutieve "inherit" kleurwaarde
-def make_transparent(fig):
-    fig.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        font=dict(color="#ffffff")  # Gebruik een geldige hex-kleur, bijv. wit (#ffffff) of zwart (#000000)
-    )
-    return fig
 
 with col_cat:
     st.markdown("### 🏷️ Categorieën Overzicht")
@@ -128,4 +128,4 @@ with col_cat:
 with col_side:
     st.markdown("### 📋 Recentste Maaltijden")
     if not df.empty:
-        st.dataframe(df, hide_index=True, use_container_width=True, height=160)
+        st.dataframe(df, hide_index=True, use_container_width=True, height=350)
