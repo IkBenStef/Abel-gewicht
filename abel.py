@@ -161,31 +161,37 @@ with b2:
                     st.plotly_chart(fig_groente, use_container_width=True)
 
         with sub_right:
-            # Histogram voor 'Hoelaat' (Tijd op de Y-as, chronologisch gesorteerd)
+            # Histogram voor 'Hoelaat' (Vroeger hoger op de Y-as)
             if not df.empty and "Hoelaat" in df.columns:
                 hoelaat_df = df[df["Hoelaat"].astype(str).str.strip() != ""].copy()
                 if not hoelaat_df.empty:
-                    # 1. Zet de tekst om naar een geldig datetime object en sorteer chronologisch
+                    # 1. Omzetten naar datetime en chronologisch sorteren
                     hoelaat_df['Tijd_dt'] = pd.to_datetime(hoelaat_df['Hoelaat'], format='%H:%M', errors='coerce')
                     hoelaat_df = hoelaat_df.dropna(subset=['Tijd_dt']).sort_values('Tijd_dt')
-                    hoelaat_df = hoelaat_df['Hoelaat'].unique()[::-1]
                     
-                    # 2. Maak de histogram met Y-as = Tijd
+                    # 2. Haal de unieke tijden op en draai ze om [::-1] (vroeg bovenaan, laat onderaan)
+                    gesorteerde_tijden_omgedraaid = hoelaat_df['Hoelaat'].unique()[::-1]
+                    
+                    # 3. Maak de histogram
                     fig_hoelaat = px.histogram(
                         hoelaat_df, 
-                        y="Hoelaat",
+                        y="Hoelaat", 
                         nbins=20,
                         title="⏰ Tijdstippen",
                         color_discrete_sequence=["#FFA07A"]
                     )
                     
-                    # 3. Zorg dat Plotly de chronologische volgorde (van vroeg naar laat) aanhoudt
+                    # 4. Geef de omgedraaide lijst mee aan de y-as
                     fig_hoelaat.update_layout(
                         height=420, 
                         margin=dict(l=10, r=10, t=30, b=10),
                         yaxis_title="Tijd",
                         xaxis_title="Aantal",
-                        yaxis=dict(type='category', categoryorder='array', categoryarray=hoelaat_df['Hoelaat'].unique())
+                        yaxis=dict(
+                            type='category', 
+                            categoryorder='array', 
+                            categoryarray=gesorteerde_tijden_omgedraaid
+                        )
                     )
                     fig_hoelaat = make_transparent(fig_hoelaat)
                     st.plotly_chart(fig_hoelaat, use_container_width=True)
