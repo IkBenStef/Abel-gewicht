@@ -67,7 +67,7 @@ st.markdown("<h2 style='text-align: center;'>🍽️ Eetdagboek & Analyse Dashbo
 
 # 4. Bovenste Rij: Statistieken (Metrics)
 st.markdown("### 📊 Overzicht")
-m1, m2, m3 = st.columns(2)
+m1, m2, m3 = st.columns([1,1,2])
 with m1:
     st.metric("Totaal Maaltijden", len(df))
 with m2:
