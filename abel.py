@@ -10,26 +10,36 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. CSS voor 100% transparante achtergrond en compacte marges
+# 2. CSS voor 100% transparante achtergrond (geschikt voor iframe)
 st.markdown("""
     <style>
-        /* Maak de complete Streamlit app en containers transparant */
-        .stApp, [data-testid="stHeader"], [data-testid="stToolbar"], .block-container {
+        /* Maak alle Streamlit achtergrondlagen en containers 100% transparant */
+        html, body, .stApp, 
+        [data-testid="stAppViewContainer"], 
+        [data-testid="stHeader"], 
+        [data-testid="stToolbar"], 
+        [data-testid="stSidebar"],
+        .main, .block-container {
             background-color: transparent !important;
+            background: transparent !important;
         }
+
+        /* Verwijder de standaard padding/marges voor strakke iframe-integratie */
         .block-container { 
-            padding-top: 1rem; 
-            padding-bottom: 0rem; 
-            padding-left: 1.5rem; 
-            padding-right: 1.5rem; 
+            padding-top: 0.5rem !important; 
+            padding-bottom: 0rem !important; 
+            padding-left: 1rem !important; 
+            padding-right: 1rem !important; 
         }
-        /* Transparante metric kaartjes met een lichte rand voor leesbaarheid */
+
+        /* Transparante metric kaartjes met lichte subtiele rand */
         div[data-testid="stMetric"] { 
             background-color: rgba(255, 255, 255, 0.05) !important; 
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(128, 128, 128, 0.2);
             padding: 8px 12px; 
             border-radius: 8px; 
         }
+
         h2, h3 { 
             margin-bottom: 0px; 
             padding-bottom: 5px; 
