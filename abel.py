@@ -128,14 +128,12 @@ with b2:
         if not df.empty:
             st.dataframe(df, hide_index=True, use_container_width=True, height=450)
 
-    elif weergave_optie == "Detail grafieken":
-        # Splitsing 50/50 binnen kolom b2
+elif weergave_optie == "Detail grafieken":
         sub_left, sub_right = st.columns(2)
 
         with sub_left:
             # 1. Cirkeldiagram Vlees
             if not df.empty and "Vlees" in df.columns:
-                # Verwijder lege regels voor schone weergave
                 vlees_df = df[df["Vlees"].astype(str).str.strip() != ""]
                 if not vlees_df.empty:
                     vlees_counts = vlees_df["Vlees"].value_counts().reset_index()
@@ -163,20 +161,29 @@ with b2:
                     st.plotly_chart(fig_groente, use_container_width=True)
 
         with sub_right:
-            # Verticale Histogram voor 'Hoelaat'
+            # Histogram voor 'Hoelaat' (Tijd op de Y-as, chronologisch gesorteerd)
             if not df.empty and "Hoelaat" in df.columns:
-                hoelaat_df = df[df["Hoelaat"].astype(str).str.strip() != ""]
+                hoelaat_df = df[df["Hoelaat"].astype(str).str.strip() != ""].copy()
                 if not hoelaat_df.empty:
+                    # 1. Zet de tekst om naar een geldig datetime object en sorteer chronologisch
+                    hoelaat_df['Tijd_dt'] = pd.to_datetime(hoelaat_df['Hoelaat'], format='%H:%M', errors='coerce')
+                    hoelaat_df = hoelaat_df.dropna(subset=['Tijd_dt']).sort_values('Tijd_dt')
+                    
+                    # 2. Maak de histogram met Y-as = Tijd
                     fig_hoelaat = px.histogram(
-                        hoelaat_df, x="Hoelaat", 
+                        hoelaat_df, 
+                        y="Hoelaat", 
                         title="⏰ Tijdstippen",
                         color_discrete_sequence=["#FFA07A"]
                     )
+                    
+                    # 3. Zorg dat Plotly de chronologische volgorde (van vroeg naar laat) aanhoudt
                     fig_hoelaat.update_layout(
                         height=420, 
                         margin=dict(l=10, r=10, t=30, b=10),
-                        xaxis_title="Tijd",
-                        yaxis_title="Aantal"
+                        yaxis_title="Tijd",
+                        xaxis_title="Aantal",
+                        yaxis=dict(type='category', categoryorder='array', categoryarray=hoelaat_df['Hoelaat'].unique())
                     )
                     fig_hoelaat = make_transparent(fig_hoelaat)
                     st.plotly_chart(fig_hoelaat, use_container_width=True)
