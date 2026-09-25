@@ -165,33 +165,32 @@ with b2:
             if not df.empty and "Hoelaat" in df.columns:
                 hoelaat_df = df[df["Hoelaat"].astype(str).str.strip() != ""].copy()
                 if not hoelaat_df.empty:
-                    # 1. Omzetten naar datetime en chronologisch sorteren
-                    hoelaat_df['Tijd_dt'] = pd.to_datetime(hoelaat_df['Hoelaat'], format='%H:%M', errors='coerce')
-                    hoelaat_df = hoelaat_df.dropna(subset=['Tijd_dt']).sort_values('Tijd_dt')
+                    # 1. Omzetten naar datetime (we plakken er een dummy datum voor zodat Plotly het snapt)
+                    hoelaat_df['Tijd_dt'] = pd.to_datetime("2026-01-01 " + hoelaat_df['Hoelaat'], format='%Y-%m-%d %H:%M', errors='coerce')
+                    hoelaat_df = hoelaat_df.dropna(subset=['Tijd_dt'])
                     
-                    # 2. Haal de unieke tijden op en draai ze om [::-1] (vroeg bovenaan, laat onderaan)
-                    gesorteerde_tijden_omgedraaid = hoelaat_df['Hoelaat'].unique()[::-1]
-                    
-                    # 3. Maak de histogram
+                    # 2. Maak de histogram (we gebruiken nu de datetime kolom voor de Y-as)
                     fig_hoelaat = px.histogram(
                         hoelaat_df, 
-                        y="Hoelaat", 
+                        y="Tijd_dt", 
                         nbins=20,
                         title="⏰ Tijdstippen",
                         color_discrete_sequence=["#FFA07A"]
                     )
                     
-                    # 4. Geef de omgedraaide lijst mee aan de y-as
+                    # 3. Layout aanpassen: as-titels leegmaken en bereik y-as vastzetten
                     fig_hoelaat.update_layout(
                         height=420, 
                         margin=dict(l=10, r=10, t=30, b=10),
-                        yaxis_title="Tijd",
-                        xaxis_title="Aantal",
+                        yaxis_title="",   # Verwijdert de titel van de Y-as (optioneel)
+                        xaxis_title="",   # VERWIJDERT DE TEKST 'Aantal' VAN DE X-AS
                         yaxis=dict(
-                            type='category', 
-                            categoryorder='array', 
-                            categoryarray=gesorteerde_tijden_omgedraaid
+                            type='date',  # Zorgt ervoor dat Plotly de as als tijdlijn ziet
+                            tickformat='%H:%M', # Toont alleen de uren en minuten op de as
+                            # Bereik instellen van 17:00 tot 19:00 (omgedraaid zodat vroeg bovenaan staat)
+                            range=["2026-01-01 19:00", "2026-01-01 17:00"] 
                         )
                     )
                     fig_hoelaat = make_transparent(fig_hoelaat)
                     st.plotly_chart(fig_hoelaat, use_container_width=True, height=500)
+
