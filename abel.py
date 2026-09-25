@@ -76,20 +76,17 @@ st.markdown("<h2 style='text-align: center;'>🍽️ Eetdagboek & Analyse Dashbo
 
 # 4. Bovenste Rij: Statistieken (Metrics + Wie Kookt Er)
 st.markdown("### 📊 Overzicht")
-m1, m2, m3 = st.columns([1, 1, 2])
+m1, m2 = st.columns([1, 4])
 with m1:
     st.metric("Totaal Maaltijden", len(df))
 with m2:
-    meeste_kok = df["Wie"].mode()[0] if not df.empty and "Wie" in df.columns and len(df["Wie"].mode()) > 0 else "-"
-    st.metric("Meest Gekookt Door", meeste_kok)
-with m3:
     st.markdown("### 👨‍🍳 Wie Kookt Er?")
     if not df.empty and "Wie" in df.columns:
         wie_counts = df["Wie"].value_counts().reset_index()
         wie_counts.columns = ["Wie", "Aantal"]
         
         fig_wie = px.bar(
-            wie_counts, x="Wie", y="Aantal", color="Wie",
+            wie_counts, x="Aantal", y="Wie", color="Wie",
             color_discrete_sequence=px.colors.qualitative.Set2
         )
         fig_wie.update_layout(height=180, margin=dict(l=10, r=10, t=10, b=10), showlegend=False)
