@@ -128,7 +128,7 @@ with b2:
         if not df.empty:
             st.dataframe(df, hide_index=True, use_container_width=True, height=450)
 
-elif weergave_optie == "Detail grafieken":
+    elif weergave_optie == "Detail grafieken":
         sub_left, sub_right = st.columns(2)
 
         with sub_left:
