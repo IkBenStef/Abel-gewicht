@@ -10,10 +10,9 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. CSS voor 100% transparante achtergrond (geschikt voor iframe)
+# 2. CSS voor 100% transparante achtergrond
 st.markdown("""
     <style>
-        /* Maak alle Streamlit achtergrondlagen en containers 100% transparant */
         html, body, .stApp, 
         [data-testid="stAppViewContainer"], 
         [data-testid="stHeader"], 
@@ -24,7 +23,6 @@ st.markdown("""
             background: transparent !important;
         }
 
-        /* Verwijder de standaard padding/marges voor strakke iframe-integratie */
         .block-container { 
             padding-top: 2rem !important; 
             padding-bottom: 0rem !important; 
@@ -32,7 +30,6 @@ st.markdown("""
             padding-right: 5rem !important; 
         }
 
-        /* Transparante metric kaartjes met lichte subtiele rand */
         div[data-testid="stMetric"] { 
             background-color: rgba(255, 255, 255, 0.05) !important; 
             border: 1px solid rgba(128, 128, 128, 0.2);
@@ -47,12 +44,12 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- FUNCTIES (bovenaan gedefinieerd zodat ze overal gebruikt kunnen worden) ---
+# --- FUNCTIES ---
 def make_transparent(fig):
     fig.update_layout(
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        font=dict(color="#ffffff")  # Aanpassen naar #000000 als je site een lichte achtergrond heeft
+        font=dict(color="#ffffff")
     )
     return fig
 
@@ -71,12 +68,14 @@ except Exception as e:
     st.error("Kon geen gegevens ophalen uit Google Sheets. Controleer je secrets configuratie.")
     st.stop()
 
-# 4. Bovenste Rij: Statistieken (Metrics + Wie Kookt Er)
+# 4. Bovenste Rij: Statistieken (top_col1 & top_col2)
 st.markdown("### 📊 Overzicht")
-a1, b2 = st.columns([1, 4])
-with a1:
+top_col1, top_col2 = st.columns([1, 4])
+
+with top_col1:
     st.metric("Totaal Maaltijden", len(df))
-with b2:
+
+with top_col2:
     if not df.empty and "Wie" in df.columns:
         wie_counts = df["Wie"].value_counts().reset_index()
         wie_counts.columns = ["Wie", "Aantal"]
@@ -86,21 +85,20 @@ with b2:
             color_discrete_sequence=px.colors.qualitative.Set2
         )
         fig_wie.update_layout(height=100, margin=dict(l=10, r=10, t=10, b=10), showlegend=False)
-        fig_wie = make_transparent(fig_wie)  # Nu werkt deze aanroep wél!
+        fig_wie = make_transparent(fig_wie)
         st.plotly_chart(fig_wie, use_container_width=True)
 
 st.divider()
 
-# 5. Onderste Rij: Grotere Categorie-grafiek (links) + Tabel (rechts)
-b1, b2 = st.columns(2)
+# 5. Onderste Rij: Donut (bot_col1) + Tabel (bot_col2)
+bot_col1, bot_col2 = st.columns(2)
 
-with a1:
+with bot_col1:  # <-- Hier stond eerder "with a1:", wat de fout veroorzaakte
     st.markdown("### 🏷️ Categorieën Overzicht")
     if not df.empty and "Categorie" in df.columns:
         cat_counts = df["Categorie"].value_counts().reset_index()
         cat_counts.columns = ["Categorie", "Aantal"]
         
-        # Uitgebreide en grotere Plotly Donut Chart
         fig_cat = px.pie(
             cat_counts, 
             names="Categorie", 
@@ -108,7 +106,6 @@ with a1:
             hole=0.45, 
             color_discrete_sequence=px.colors.qualitative.Pastel
         )
-        # Hoogte vergroot zodat categorieën goed zichtbaar en dominant zijn
         fig_cat.update_layout(
             height=420, 
             margin=dict(l=10, r=10, t=20, b=10), 
@@ -116,9 +113,9 @@ with a1:
             legend=dict(orientation="h", yanchor="bottom", y=-0.1, xanchor="center", x=0.5)
         )
         fig_cat = make_transparent(fig_cat)
-        st.plotly_chart(fig_cat, use_container_width=True, height=500)
+        st.plotly_chart(fig_cat, use_container_width=True)
 
-with b2:
+with bot_col2:
     st.markdown("### 📋 Recentste Maaltijden")
     if not df.empty:
-        st.dataframe(df, hide_index=True, use_container_width=True, height=500)
+        st.dataframe(df, hide_index=True, use_container_width=True, height=420)
