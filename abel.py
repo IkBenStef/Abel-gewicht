@@ -142,7 +142,7 @@ with b2:
                         vlees_counts, names="Vlees", values="Aantal", hole=0.3,
                         title="🥩 Vlees", color_discrete_sequence=px.colors.qualitative.Set3
                     )
-                    fig_vlees.update_layout(height=250, margin=dict(l=5, r=5, t=30, b=5), showlegend=False)
+                    fig_vlees.update_layout(height=250, margin=dict(l=5, r=5, t=30, b=5))
                     fig_vlees = make_transparent(fig_vlees)
                     st.plotly_chart(fig_vlees, use_container_width=True)
 
@@ -156,7 +156,7 @@ with b2:
                         groente_counts, names="Groente", values="Aantal", hole=0.3,
                         title="🥦 Groente", color_discrete_sequence=px.colors.qualitative.Set2
                     )
-                    fig_groente.update_layout(height=250, margin=dict(l=5, r=5, t=30, b=5), showlegend=False)
+                    fig_groente.update_layout(height=250, margin=dict(l=5, r=5, t=30, b=5))
                     fig_groente = make_transparent(fig_groente)
                     st.plotly_chart(fig_groente, use_container_width=True)
 
