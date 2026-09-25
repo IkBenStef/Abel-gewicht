@@ -192,5 +192,5 @@ with b2:
                         )
                     )
                     fig_hoelaat = make_transparent(fig_hoelaat)
-                    st.plotly_chart(fig_hoelaat, use_container_width=True, height=600)
+                    st.plotly_chart(fig_hoelaat, use_container_width=True, height=550)
 
