@@ -28,8 +28,8 @@ st.markdown("""
         .block-container { 
             padding-top: 0.5rem !important; 
             padding-bottom: 0rem !important; 
-            padding-left: 1rem !important; 
-            padding-right: 1rem !important; 
+            padding-left: 5rem !important; 
+            padding-right: 5rem !important; 
         }
 
         /* Transparante metric kaartjes met lichte subtiele rand */
