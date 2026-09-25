@@ -89,7 +89,7 @@ with b2:
         fig_wie = make_transparent(fig_wie)  # Nu werkt deze aanroep wél!
         st.plotly_chart(fig_wie, use_container_width=True)
 
-st.markdown("<hr style='margin: 15px 0; border: 0.5px solid rgba(255,255,255,0.1);'>", unsafe_allow_html=True)
+st.divider()
 
 # 5. Onderste Rij: Grotere Categorie-grafiek (links) + Tabel (rechts)
 b1, b2 = st.columns(2)
