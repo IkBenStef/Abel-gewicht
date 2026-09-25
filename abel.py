@@ -168,11 +168,13 @@ with b2:
                     # 1. Zet de tekst om naar een geldig datetime object en sorteer chronologisch
                     hoelaat_df['Tijd_dt'] = pd.to_datetime(hoelaat_df['Hoelaat'], format='%H:%M', errors='coerce')
                     hoelaat_df = hoelaat_df.dropna(subset=['Tijd_dt']).sort_values('Tijd_dt')
+                    gesorteerde_tijden_omgedraaid = hoelaat_df['Hoelaat'].unique()[::-1]
                     
                     # 2. Maak de histogram met Y-as = Tijd
                     fig_hoelaat = px.histogram(
                         hoelaat_df, 
-                        y="Hoelaat", 
+                        y="Hoelaat",
+                        nbins=20,
                         title="⏰ Tijdstippen",
                         color_discrete_sequence=["#FFA07A"]
                     )
