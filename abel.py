@@ -114,7 +114,7 @@ with b1:
             legend=dict(orientation="v", yanchor="middle", y=0.5, xanchor="right", x=-0.1)
         )
         fig_cat = make_transparent(fig_cat)
-        st.plotly_chart(fig_cat, use_container_width=True)
+        st.plotly_chart(fig_cat, use_container_width=True, height=500)
 
 with b2:
     # Dropdown menu keuze
@@ -126,7 +126,7 @@ with b2:
 
     if weergave_optie == "Heel DataFrame":
         if not df.empty:
-            st.dataframe(df, hide_index=True, use_container_width=True, height=450)
+            st.dataframe(df, hide_index=True, use_container_width=True, height=500)
 
     elif weergave_optie == "Detail grafieken":
         sub_left, sub_right = st.columns(2)
@@ -142,7 +142,7 @@ with b2:
                         vlees_counts, names="Vlees", values="Aantal", hole=0.3,
                         title="🥩 Vlees", color_discrete_sequence=px.colors.qualitative.Set3
                     )
-                    fig_vlees.update_layout(height=210, margin=dict(l=5, r=5, t=30, b=5), showlegend=False)
+                    fig_vlees.update_layout(height=250, margin=dict(l=5, r=5, t=30, b=5), showlegend=False)
                     fig_vlees = make_transparent(fig_vlees)
                     st.plotly_chart(fig_vlees, use_container_width=True)
 
@@ -156,7 +156,7 @@ with b2:
                         groente_counts, names="Groente", values="Aantal", hole=0.3,
                         title="🥦 Groente", color_discrete_sequence=px.colors.qualitative.Set2
                     )
-                    fig_groente.update_layout(height=210, margin=dict(l=5, r=5, t=30, b=5), showlegend=False)
+                    fig_groente.update_layout(height=250, margin=dict(l=5, r=5, t=30, b=5), showlegend=False)
                     fig_groente = make_transparent(fig_groente)
                     st.plotly_chart(fig_groente, use_container_width=True)
 
@@ -194,4 +194,4 @@ with b2:
                         )
                     )
                     fig_hoelaat = make_transparent(fig_hoelaat)
-                    st.plotly_chart(fig_hoelaat, use_container_width=True)
+                    st.plotly_chart(fig_hoelaat, use_container_width=True, height=500)
