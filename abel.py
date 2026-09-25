@@ -26,7 +26,7 @@ st.markdown("""
 
         /* Verwijder de standaard padding/marges voor strakke iframe-integratie */
         .block-container { 
-            padding-top: 0.5rem !important; 
+            padding-top: 2rem !important; 
             padding-bottom: 0rem !important; 
             padding-left: 5rem !important; 
             padding-right: 5rem !important; 
