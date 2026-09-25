@@ -113,7 +113,7 @@ with b1:
             height=420, 
             margin=dict(l=10, r=10, t=20, b=10), 
             showlegend=True,
-            legend=dict(orientation="h", yanchor="left", y=-0.1, xanchor="center", x=0.5)
+            legend=dict(orientation="v", yanchor="middle", y=0.5, xanchor="right", x=-0.1)
         )
         fig_cat = make_transparent(fig_cat)
         st.plotly_chart(fig_cat, use_container_width=True, height=500)
