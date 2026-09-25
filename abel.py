@@ -156,7 +156,7 @@ with b2:
                     groente_counts.columns = ["Groente", "Aantal"]
                     fig_groente = px.pie(
                         groente_counts, names="Groente", values="Aantal", hole=0.3,
-                        title="🥦 Groente", color_discrete_sequence=px.colors.qualitative.Emerald
+                        title="🥦 Groente", color_discrete_sequence=px.colors.qualitative.Set2
                     )
                     fig_groente.update_layout(height=210, margin=dict(l=5, r=5, t=30, b=5), showlegend=False)
                     fig_groente = make_transparent(fig_groente)
